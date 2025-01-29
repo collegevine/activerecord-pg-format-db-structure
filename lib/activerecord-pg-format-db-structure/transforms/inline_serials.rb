@@ -18,20 +18,18 @@ module ActiveRecordPgFormatDbStructure
 
       def initialize(raw_statements)
         @raw_statements = raw_statements
-        @columns_to_replace_with_serial = {}
-        @sequences_to_remove = Set.new
       end
 
       def transform!
-        extract_serials_to_inline!
-        delete_redundant_statements!
+        extract_serials_to_inline! => columns_to_replace_with_serial:, sequences_to_remove:
+        delete_redundant_statements!(sequences_to_remove)
         raw_statements.each do |raw_statement|
           next unless raw_statement.stmt.to_h in create_stmt: { relation: { schemaname:, relname: }}
 
           relation = { schemaname:, relname: }
-          next unless @columns_to_replace_with_serial.include?(relation)
+          next unless columns_to_replace_with_serial.include?(relation)
 
-          @columns_to_replace_with_serial[relation].each do |colname|
+          columns_to_replace_with_serial[relation].each do |colname|
             replace_id_with_serial!(raw_statement, colname)
           end
         end
@@ -40,16 +38,19 @@ module ActiveRecordPgFormatDbStructure
       private
 
       def extract_serials_to_inline!
+        columns_to_replace_with_serial = {}
+        sequences_to_remove = Set.new
         raw_statements.delete_if do |raw_statement|
           next unless match_alter_column_statement(raw_statement) in { column:, sequence: }
 
           table = column.except(:column_name)
-          @columns_to_replace_with_serial[table] ||= []
-          @columns_to_replace_with_serial[table] << column[:column_name]
-          @sequences_to_remove << sequence
+          columns_to_replace_with_serial[table] ||= []
+          columns_to_replace_with_serial[table] << column[:column_name]
+          sequences_to_remove << sequence
 
           true
         end
+        { columns_to_replace_with_serial:, sequences_to_remove: }
       end
 
       def match_alter_column_statement(raw_statement)
@@ -115,13 +116,13 @@ module ActiveRecordPgFormatDbStructure
         end
       end
 
-      def delete_redundant_statements!
+      def delete_redundant_statements!(sequences_to_remove)
         raw_statements.delete_if do |raw_statement|
           case raw_statement.stmt.to_h
           in create_seq_stmt: { sequence: { schemaname:, relname: }}
-            @sequences_to_remove.include?({ schemaname:, relname: })
+            sequences_to_remove.include?({ schemaname:, relname: })
           in alter_seq_stmt: {sequence: { schemaname:, relname: }}
-            @sequences_to_remove.include?({ schemaname:, relname: })
+            sequences_to_remove.include?({ schemaname:, relname: })
           else
             false
           end

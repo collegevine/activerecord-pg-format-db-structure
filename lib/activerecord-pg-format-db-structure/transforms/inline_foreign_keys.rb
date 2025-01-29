@@ -14,18 +14,17 @@ module ActiveRecordPgFormatDbStructure
 
       def initialize(raw_statements)
         @raw_statements = raw_statements
-        @columns_with_foreign_key = {}
       end
 
       def transform!
-        extract_foreign_keys_to_inline!
+        columns_with_foreign_key = extract_foreign_keys_to_inline!
         raw_statements.each do |raw_statement|
           next unless raw_statement.stmt.to_h in create_stmt: { relation: { schemaname:, relname: }}
 
           relation = { schemaname:, relname: }
-          next unless @columns_with_foreign_key.include?(relation)
+          next unless columns_with_foreign_key.include?(relation)
 
-          @columns_with_foreign_key[relation].each do |column_name, constraint|
+          columns_with_foreign_key[relation].each do |column_name, constraint|
             add_constraint!(raw_statement, column_name, constraint)
           end
         end
@@ -34,15 +33,17 @@ module ActiveRecordPgFormatDbStructure
       private
 
       def extract_foreign_keys_to_inline!
+        columns_with_foreign_key = {}
         raw_statements.delete_if do |raw_statement|
           next unless match_alter_column_statement(raw_statement) in { column:, constraint: }
 
           table = column.except(:colname)
-          @columns_with_foreign_key[table] ||= {}
-          @columns_with_foreign_key[table][column[:colname]] = constraint
+          columns_with_foreign_key[table] ||= {}
+          columns_with_foreign_key[table][column[:colname]] = constraint
 
           true
         end
+        columns_with_foreign_key
       end
 
       def match_alter_column_statement(raw_statement)
