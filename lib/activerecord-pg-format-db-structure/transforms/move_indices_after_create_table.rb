@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
-require "pg_query"
+require_relative "base"
 
 module ActiveRecordPgFormatDbStructure
   module Transforms
     # Move indice declaration just below the table they index
-    class MoveIndicesAfterCreateTable
-      attr_reader :raw_statements
-
-      def initialize(raw_statements)
-        @raw_statements = raw_statements
-      end
-
+    class MoveIndicesAfterCreateTable < Base
       def transform!
         extract_table_indices!.each do |table, indices|
           insert_index = find_insert_index(**table)
