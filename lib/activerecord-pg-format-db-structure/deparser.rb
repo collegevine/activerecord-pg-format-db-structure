@@ -75,7 +75,7 @@ module ActiveRecordPgFormatDbStructure
           relation: { relname: "tmp" },
           cmds: [cmd]
         )
-      ).gsub("ALTER ONLY tmp ", "")
+      ).gsub(/\AALTER ONLY tmp /, "")
     end
 
     def deparse_create_stmt(create_stmt)
@@ -162,7 +162,7 @@ module ActiveRecordPgFormatDbStructure
       insert_stmt_str << "\n;"
 
       query_str = pretty_formt_sql_string(PgQuery.deparse_stmt(insert_stmt.select_stmt.inner))
-      query_str.gsub!("VALUES (", "VALUES\n (")
+      query_str.gsub!(/\AVALUES /, "VALUES\n ")
 
       insert_stmt_str[placeholder_query_string] = query_str
       insert_stmt_str
