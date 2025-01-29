@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-## [0.1.1] - pending
+## [0.1.1] - 2025-01-29
 
 - Proper deparsing of all statements
 - Formatting of select and insert sub-statements using `anbt-sql-formatter`
