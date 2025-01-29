@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
-require "pg_query"
+require_relative "base"
 
 module ActiveRecordPgFormatDbStructure
   module Transforms
     # Group alter table statements into one operation per
     # table. Should be run after other operations that inline alter statements.
-    class GroupAlterTableStatements
-      attr_reader :raw_statements
-
-      def initialize(raw_statements)
-        @raw_statements = raw_statements
-      end
-
+    class GroupAlterTableStatements < Base
       def transform!
         alter_groups = extract_alter_table_statements!
 

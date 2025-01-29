@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
-require "pg_query"
+require_relative "base"
 
 module ActiveRecordPgFormatDbStructure
   module Transforms
     # Inlines primary keys with the table declaration
-    class InlinePrimaryKeys
-      attr_reader :raw_statements
-
-      def initialize(raw_statements)
-        @raw_statements = raw_statements
-      end
-
+    class InlinePrimaryKeys < Base
       def transform!
         columns_with_primary_key = extract_primary_keys_to_inline!
         raw_statements.each do |raw_statement|
@@ -74,10 +68,8 @@ module ActiveRecordPgFormatDbStructure
             c.to_h in { constraint: { contype: :CONSTR_NOTNULL } }
           end
 
-          table_elt.column_def.constraints << PgQuery::Node.new(
-            constraint: PgQuery::Constraint.new(
-              contype: :CONSTR_PRIMARY
-            )
+          table_elt.column_def.constraints << PgQuery::Node.from(
+            PgQuery::Constraint.new(contype: :CONSTR_PRIMARY)
           )
         end
       end

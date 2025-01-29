@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "pg_query"
+require_relative "base"
 
 module ActiveRecordPgFormatDbStructure
   module Transforms
@@ -13,13 +13,7 @@ module ActiveRecordPgFormatDbStructure
     # It also assumes that the associated sequence has default settings. A
     # later version could try to be more strict / validate that the
     # sequence indeed has default settings.
-    class InlineSerials
-      attr_reader :raw_statements
-
-      def initialize(raw_statements)
-        @raw_statements = raw_statements
-      end
-
+    class InlineSerials < Base
       def transform!
         extract_serials_to_inline! => columns_to_replace_with_serial:, sequences_to_remove:
         delete_redundant_statements!(sequences_to_remove)
@@ -108,9 +102,9 @@ module ActiveRecordPgFormatDbStructure
 
           table_elt.column_def.type_name = PgQuery::TypeName.new(
             names: [
-              PgQuery::Node.new(string: PgQuery::String.new(
-                sval: COLUMN_TYPE_TO_SERIAL_TYPE.fetch(integer_type)
-              ))
+              PgQuery::Node.from_string(
+                COLUMN_TYPE_TO_SERIAL_TYPE.fetch(integer_type)
+              )
             ]
           )
         end

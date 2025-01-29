@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
-require "pg_query"
+require_relative "base"
 
 module ActiveRecordPgFormatDbStructure
   module Transforms
     # Inline non-foreign key constraints into table declaration
-    class InlineConstraints
-      attr_reader :raw_statements
-
-      def initialize(raw_statements)
-        @raw_statements = raw_statements
-      end
-
+    class InlineConstraints < Base
       def transform!
         tables_with_constraint = extract_constraints_to_inline!
         raw_statements.each do |raw_statement|
@@ -69,8 +63,8 @@ module ActiveRecordPgFormatDbStructure
       end
 
       def add_constraint!(raw_statement, constraint)
-        raw_statement.stmt.create_stmt.table_elts << PgQuery::Node.new(
-          constraint: PgQuery::Constraint.new(constraint)
+        raw_statement.stmt.create_stmt.table_elts << PgQuery::Node.from(
+          PgQuery::Constraint.new(constraint)
         )
       end
     end
