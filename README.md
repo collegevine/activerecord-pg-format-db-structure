@@ -182,9 +182,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 into this much more compact and normalized version:
 
 ```sql
--- Name: pgcrypto; Type: EXTENSION
 
-CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
 
 -- Name: comments; Type: TABLE;
@@ -219,8 +219,10 @@ ALTER TABLE ONLY public.comments
   ADD CONSTRAINT fk_rails_0000000001 FOREIGN KEY (post_id) REFERENCES public.posts (id),
   ADD CONSTRAINT fk_rails_0000000002 FOREIGN KEY (user_id) REFERENCES public.users (id);
 
-INSERT INTO "schema_migrations" (version) VALUES
-('20250124155339');
+
+INSERT INTO schema_migrations (version) VALUES
+ ('20250124155339')
+;
 ```
 
 which is a lot more compact, easier to read, and reduces the risk of
