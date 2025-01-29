@@ -49,28 +49,40 @@ module ActiveRecordPgFormatDbStructure
     end
 
     def deparse_create_stmt(create_stmt)
+      placeholder_column = PgQuery::Node.from(
+        PgQuery::ColumnDef.new(
+          colname: "placeholder_column",
+          type_name: {
+            names: [PgQuery::Node.from_string("placeholder_type")]
+          }
+        )
+      )
+
       table_str = "\n\n\n-- Name: #{create_stmt.relation.relname}; Type: TABLE;\n\n"
       table_str << PgQuery.deparse_stmt(
         PgQuery::CreateStmt.new(
           **create_stmt.to_h,
-          table_elts: []
+          table_elts: [placeholder_column]
         )
       )
-      table_str.gsub!(/\(\)\z/, "")
-      table_str << "("
-      table_str << create_stmt.table_elts.map do |elt|
+      table_str << ";"
+
+      table_columns = create_stmt.table_elts.map do |elt|
         "\n    #{deparse_table_elt(elt)}"
       end.join(",")
-      table_str << "\n);"
+      table_columns << "\n"
+
+      table_str[deparse_table_elt(placeholder_column)] = table_columns
+
       table_str
     end
 
     def deparse_table_elt(elt)
       PgQuery.deparse_stmt(
         PgQuery::CreateStmt.new(
-          relation: PgQuery::RangeVar.new(relname: "tmp"), table_elts: [elt]
+          relation: { relname: "tmp" }, table_elts: [elt]
         )
-      ).sub(/\ACREATE TABLE ONLY tmp \(/, "").sub(/\)\z/, "")
+      ).gsub(/\ACREATE TABLE ONLY tmp \((.*)\)\z/, '\1')
     end
   end
 end
