@@ -334,13 +334,9 @@ Should be run after other operations that inline alter statements.
 
 ## Deparser
 
-As of today, this is a bare implemenation that works with the current combination of tranformers.
+Returns an SQL string from raw PgQuery statements.
 
-As of now, it will only deparse `CREATE TABLE`, `CREATE INDEX` and
-`ALTER TABLE` statements. Other statements will be kept unchanged from
-the input SQL.
-
-In order to support all statements, we will need to find a solution to more cleanly format SQL queries, as deparsing a `CREATE VIEW` statement will result in a single unreadable line if relying on `pg_query`.
+Relying mostly on `PgQuery.deparse`, but applying some formatting using the [anbt-sql-formatter](https://github.com/sonota88/anbt-sql-formatter) gem on select & insert statements.
 
 ## Development
 

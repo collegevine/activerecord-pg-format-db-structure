@@ -96,8 +96,10 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineForeignKeys do
         ALTER TABLE ONLY public.posts
           ADD CONSTRAINT postive_score CHECK (score > 0);
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
   end

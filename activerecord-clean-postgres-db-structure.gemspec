@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
+  spec.add_dependency "anbt-sql-formatter", "~> 0.1"
   spec.add_dependency "pg_query", "~> 6.0"
 
   # For more information and examples about making a new gem, check out our

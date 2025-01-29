@@ -2,7 +2,8 @@
 
 ## [0.1.1] - pending
 
-- Improve deparsing by returning better formatted SQL strings
+- Proper deparsing of all statements
+- Formatting of select and insert sub-statements using `anbt-sql-formatter`
 
 ## [0.1.0] - 2025-01-24
 

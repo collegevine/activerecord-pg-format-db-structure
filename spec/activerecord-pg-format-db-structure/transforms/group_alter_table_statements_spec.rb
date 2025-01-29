@@ -104,8 +104,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableState
           ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
 
@@ -136,6 +137,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableState
         );
 
         CREATE INDEX my_index ON public.users USING btree (id);
+
 
         INSERT INTO "schema_migrations" (version) VALUES
         ('20250124155339');
@@ -174,8 +176,10 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableState
         );
         CREATE INDEX my_index ON public.users USING btree (id);
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
   end

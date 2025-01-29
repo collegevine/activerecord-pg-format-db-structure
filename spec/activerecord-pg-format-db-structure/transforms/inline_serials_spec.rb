@@ -203,12 +203,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineSerials do
       SQL
 
       expect(formatter.format(source)).to eq(<<~SQL.chomp)
-        -- Name: pgcrypto; Type: EXTENSION
-
-        CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
-        -- Name: EXTENSION pgcrypto; Type: COMMENT
+        CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
         COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
@@ -240,17 +237,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineSerials do
             updated_at timestamp(6) NOT NULL
         );
 
-        -- Name: posts_id_non_serial_seq; Type: SEQUENCE
-
-        CREATE SEQUENCE public.posts_id_non_serial_seq
-            START WITH 1000
-            INCREMENT BY 10
-            NO MINVALUE
-            NO MAXVALUE
-            CACHE 1;
-
-
-        -- Name: posts_id_non_serial_seq; Type: SEQUENCE OWNED BY
+        CREATE SEQUENCE public.posts_id_non_serial_seq START 1000 INCREMENT 10 NO MINVALUE NO MAXVALUE CACHE 1;
 
         ALTER SEQUENCE public.posts_id_non_serial_seq OWNED BY public.posts.id;
 
@@ -281,8 +268,10 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineSerials do
         ALTER TABLE ONLY public.comments
           ADD CONSTRAINT fk_rails_0000000002 FOREIGN KEY (user_id) REFERENCES public.users (id);
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
   end
