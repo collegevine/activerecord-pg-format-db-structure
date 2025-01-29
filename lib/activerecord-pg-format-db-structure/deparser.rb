@@ -31,22 +31,11 @@ module ActiveRecordPgFormatDbStructure
       in stmt: { view_stmt: _ }
         deparse_view_stmt(raw_statement.stmt.view_stmt)
       else
-        deparse_generic_raw_statement(raw_statement)
+        "\n#{deparse_stmt(raw_statement.stmt.inner)}"
       end
     end
 
     private
-
-    def deparse_generic_raw_statement(raw_statement)
-      generic_raw_statement_str = +"\n\n"
-      generic_raw_statement_str << PgQuery.deparse(
-        PgQuery::ParseResult.new(
-          version: PgQuery::PG_VERSION_NUM,
-          stmts: [raw_statement]
-        )
-      )
-      generic_raw_statement_str << ";"
-    end
 
     def deparse_stmt(stmt)
       "\n#{PgQuery.deparse_stmt(stmt)};"
