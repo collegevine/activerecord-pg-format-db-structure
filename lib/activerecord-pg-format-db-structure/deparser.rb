@@ -32,10 +32,6 @@ module ActiveRecordPgFormatDbStructure
       source[start..stop]
     end
 
-    def deparse_index_stmt(index_stmt)
-      deparse_stmt(index_stmt)
-    end
-
     def deparse_alter_table_stmt(alter_table_stmt)
       "\n#{
         deparse_stmt(alter_table_stmt)
@@ -46,6 +42,10 @@ module ActiveRecordPgFormatDbStructure
 
     def deparse_stmt(stmt)
       "\n#{PgQuery.deparse_stmt(stmt)};"
+    end
+
+    def deparse_index_stmt(index_stmt)
+      deparse_stmt(index_stmt)
     end
 
     def deparse_create_stmt(create_stmt)
