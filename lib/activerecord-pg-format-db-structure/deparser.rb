@@ -32,20 +32,39 @@ module ActiveRecordPgFormatDbStructure
       source[start..stop]
     end
 
-    def deparse_alter_table_stmt(alter_table_stmt)
-      "\n#{
-        deparse_stmt(alter_table_stmt)
-          .gsub(" ADD ", "\n  ADD ")
-          .gsub(" ALTER COLUMN ", "\n  ALTER COLUMN ")
-      }"
-    end
-
     def deparse_stmt(stmt)
       "\n#{PgQuery.deparse_stmt(stmt)};"
     end
 
     def deparse_index_stmt(index_stmt)
       deparse_stmt(index_stmt)
+    end
+
+    def deparse_alter_table_stmt(alter_table_stmt)
+      alter_table_str = +"\n\n"
+      alter_table_str << PgQuery.deparse_stmt(
+        PgQuery::AlterTableStmt.new(
+          **alter_table_stmt.to_h,
+          cmds: []
+        )
+      ).chomp(" ")
+
+      alter_table_cmds_str = alter_table_stmt.cmds.map do |cmd|
+        "\n  #{deparse_alter_table_cmd(cmd)}"
+      end.join(",")
+
+      alter_table_str << alter_table_cmds_str
+      alter_table_str << ";"
+      alter_table_str
+    end
+
+    def deparse_alter_table_cmd(cmd)
+      PgQuery.deparse_stmt(
+        PgQuery::AlterTableStmt.new(
+          relation: { relname: "tmp" },
+          cmds: [cmd]
+        )
+      ).gsub("ALTER ONLY tmp ", "")
     end
 
     def deparse_create_stmt(create_stmt)
