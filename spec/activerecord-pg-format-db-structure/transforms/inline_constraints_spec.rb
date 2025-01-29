@@ -94,8 +94,10 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineConstraints do
         ALTER TABLE ONLY public.comments
           ADD CONSTRAINT fk_rails_0000000002 FOREIGN KEY (user_id) REFERENCES public.users (id);
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
   end

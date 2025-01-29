@@ -182,9 +182,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 into this much more compact and normalized version:
 
 ```sql
--- Name: pgcrypto; Type: EXTENSION
 
-CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
 
 -- Name: comments; Type: TABLE;
@@ -219,8 +219,10 @@ ALTER TABLE ONLY public.comments
   ADD CONSTRAINT fk_rails_0000000001 FOREIGN KEY (post_id) REFERENCES public.posts (id),
   ADD CONSTRAINT fk_rails_0000000002 FOREIGN KEY (user_id) REFERENCES public.users (id);
 
-INSERT INTO "schema_migrations" (version) VALUES
-('20250124155339');
+
+INSERT INTO schema_migrations (version) VALUES
+ ('20250124155339')
+;
 ```
 
 which is a lot more compact, easier to read, and reduces the risk of
@@ -334,13 +336,9 @@ Should be run after other operations that inline alter statements.
 
 ## Deparser
 
-As of today, this is a bare implemenation that works with the current combination of tranformers.
+Returns an SQL string from raw PgQuery statements.
 
-As of now, it will only deparse `CREATE TABLE`, `CREATE INDEX` and
-`ALTER TABLE` statements. Other statements will be kept unchanged from
-the input SQL.
-
-In order to support all statements, we will need to find a solution to more cleanly format SQL queries, as deparsing a `CREATE VIEW` statement will result in a single unreadable line if relying on `pg_query`.
+Relying mostly on `PgQuery.deparse`, but applying some formatting using the [anbt-sql-formatter](https://github.com/sonota88/anbt-sql-formatter) gem on select & insert statements.
 
 ## Development
 

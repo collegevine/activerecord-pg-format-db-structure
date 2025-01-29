@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineConstraints do
+RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::RemoveCommentsOnExtensions do
   describe "#transform!" do
     it "remove COMMENT on extensions" do
       formatter = ActiveRecordPgFormatDbStructure::Formatter.new(
@@ -38,14 +38,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineConstraints do
       SQL
 
       expect(formatter.format(source)).to eq(<<~SQL.chomp)
-        -- Name: pgcrypto; Type: EXTENSION
-
-        CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
-        -- Name: EXTENSION pgcrypto; Type: COMMENT
-
-        COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+        CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
 
         -- Name: comments; Type: TABLE;
@@ -58,8 +53,10 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineConstraints do
             updated_at timestamp(6) NOT NULL
         );
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
   end

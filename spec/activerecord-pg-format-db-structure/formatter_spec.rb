@@ -168,9 +168,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
       SQL
 
       expect(formatter.format(source)).to eq(<<~SQL.chomp)
-        -- Name: pgcrypto; Type: EXTENSION
 
-        CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+        CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
 
         -- Name: comments; Type: TABLE;
@@ -205,8 +205,10 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
           ADD CONSTRAINT fk_rails_0000000001 FOREIGN KEY (post_id) REFERENCES public.posts (id),
           ADD CONSTRAINT fk_rails_0000000002 FOREIGN KEY (user_id) REFERENCES public.users (id);
 
-        INSERT INTO "schema_migrations" (version) VALUES
-        ('20250124155339');
+
+        INSERT INTO schema_migrations (version) VALUES
+         ('20250124155339')
+        ;
       SQL
     end
   end
