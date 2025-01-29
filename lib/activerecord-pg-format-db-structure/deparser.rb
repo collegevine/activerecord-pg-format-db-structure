@@ -116,13 +116,11 @@ module ActiveRecordPgFormatDbStructure
     end
 
     def deparse_create_table_as_stmt(stmt)
-      placeholder_query = PgQuery.parse("SELECT placeholder").tree.stmts.first.stmt.select_stmt
-
       create_table_as_stmt_str = +"\n\n"
       create_table_as_stmt_str << PgQuery.deparse_stmt(
         PgQuery::CreateTableAsStmt.new(
           **stmt.to_h,
-          query: PgQuery::Node.from(placeholder_query)
+          query: PgQuery::Node.from(placeholder_query_stmt)
         )
       )
       create_table_as_stmt_str << ";"
@@ -131,18 +129,16 @@ module ActiveRecordPgFormatDbStructure
       query_str << pretty_formt_sql_string(PgQuery.deparse_stmt(stmt.query.inner)).gsub(/^/, PRETTY_INDENT_STRING)
       query_str << "\n)"
 
-      create_table_as_stmt_str[PgQuery.deparse_stmt(placeholder_query)] = query_str
+      create_table_as_stmt_str[placeholder_query_string] = query_str
       create_table_as_stmt_str
     end
 
     def deparse_view_stmt(stmt)
-      placeholder_query = PgQuery.parse("SELECT placeholder").tree.stmts.first.stmt.select_stmt
-
       view_stmt_str = +"\n\n"
       view_stmt_str << PgQuery.deparse_stmt(
         PgQuery::ViewStmt.new(
           **stmt.to_h,
-          query: PgQuery::Node.from(placeholder_query)
+          query: PgQuery::Node.from(placeholder_query_stmt)
         )
       )
       view_stmt_str << ";"
@@ -151,18 +147,16 @@ module ActiveRecordPgFormatDbStructure
       query_str << pretty_formt_sql_string(PgQuery.deparse_stmt(stmt.query.inner)).gsub(/^/, PRETTY_INDENT_STRING)
       query_str << "\n)"
 
-      view_stmt_str[PgQuery.deparse_stmt(placeholder_query)] = query_str
+      view_stmt_str[placeholder_query_string] = query_str
       view_stmt_str
     end
 
     def deparse_insert_statement(insert_stmt)
-      placeholder_query = PgQuery.parse("SELECT placeholder").tree.stmts.first.stmt.select_stmt
-
       insert_stmt_str = +"\n\n\n"
       insert_stmt_str << PgQuery.deparse_stmt(
         PgQuery::InsertStmt.new(
           **insert_stmt.to_h,
-          select_stmt: PgQuery::Node.from(placeholder_query)
+          select_stmt: PgQuery::Node.from(placeholder_query_stmt)
         )
       )
       insert_stmt_str << "\n;"
@@ -170,7 +164,7 @@ module ActiveRecordPgFormatDbStructure
       query_str = pretty_formt_sql_string(PgQuery.deparse_stmt(insert_stmt.select_stmt.inner))
       query_str.gsub!("VALUES (", "VALUES\n (")
 
-      insert_stmt_str[PgQuery.deparse_stmt(placeholder_query)] = query_str
+      insert_stmt_str[placeholder_query_string] = query_str
       insert_stmt_str
     end
 
@@ -180,6 +174,14 @@ module ActiveRecordPgFormatDbStructure
       rule.indent_string = PRETTY_INDENT_STRING
       formatter = AnbtSql::Formatter.new(rule)
       formatter.format(sql)
+    end
+
+    def placeholder_query_string
+      @placeholder_query_string ||= PgQuery.deparse_stmt(placeholder_query_stmt)
+    end
+
+    def placeholder_query_stmt
+      @placeholder_query_stmt ||= PgQuery.parse("SELECT placeholder").tree.stmts.first.stmt.select_stmt
     end
   end
 end
