@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.1.2] - 2025-01-30
+
 - Get rid of `anbt-sql-formatter` dependency since it breaks queries with type casting
 
 ## [0.1.1] - 2025-01-29
