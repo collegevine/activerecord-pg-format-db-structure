@@ -338,7 +338,7 @@ Should be run after other operations that inline alter statements.
 
 Returns an SQL string from raw PgQuery statements.
 
-Relying mostly on `PgQuery.deparse`, but applying some formatting using the [anbt-sql-formatter](https://github.com/sonota88/anbt-sql-formatter) gem on select & insert statements.
+Relying mostly on `PgQuery.deparse`, and does a best effort to add some indentation where possible.
 
 ## Development
 
