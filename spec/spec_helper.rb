@@ -7,6 +7,7 @@ SimpleCov.start
 
 require "activerecord-pg-format-db-structure"
 require "activerecord-pg-format-db-structure/formatter"
+require "pry"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

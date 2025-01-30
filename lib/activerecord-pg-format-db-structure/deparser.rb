@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "pg_query"
-require "anbt-sql-formatter/formatter"
 
 module ActiveRecordPgFormatDbStructure
   # Returns a list of SQL strings from a list of PgQuery::RawStmt.
@@ -23,7 +22,7 @@ module ActiveRecordPgFormatDbStructure
       in stmt: { alter_table_stmt: _ }
         deparse_alter_table_stmt(raw_statement.stmt.alter_table_stmt)
       in stmt: { select_stmt: _ }
-        deparse_query_statement(raw_statement.stmt.select_stmt)
+        deparse_select_stmt(raw_statement.stmt.select_stmt)
       in stmt: { insert_stmt: _ }
         deparse_insert_statement(raw_statement.stmt.insert_stmt)
       in stmt: { create_table_as_stmt: _ }
@@ -41,9 +40,9 @@ module ActiveRecordPgFormatDbStructure
       "\n#{PgQuery.deparse_stmt(stmt)};"
     end
 
-    def deparse_query_statement(stmt)
+    def deparse_select_stmt(select_stmt)
       generic_query_str = +"\n\n"
-      generic_query_str << pretty_formt_sql_string(PgQuery.deparse_stmt(stmt))
+      generic_query_str << deparse_leaf_select_stmt(select_stmt)
       generic_query_str << ";"
     end
 
@@ -126,7 +125,7 @@ module ActiveRecordPgFormatDbStructure
       create_table_as_stmt_str << ";"
 
       query_str = +"(\n"
-      query_str << pretty_formt_sql_string(PgQuery.deparse_stmt(stmt.query.inner)).gsub(/^/, PRETTY_INDENT_STRING)
+      query_str << deparse_leaf_select_stmt(stmt.query.select_stmt).gsub(/^/, PRETTY_INDENT_STRING)
       query_str << "\n)"
 
       create_table_as_stmt_str[placeholder_query_string] = query_str
@@ -144,7 +143,7 @@ module ActiveRecordPgFormatDbStructure
       view_stmt_str << ";"
 
       query_str = +"(\n"
-      query_str << pretty_formt_sql_string(PgQuery.deparse_stmt(stmt.query.inner)).gsub(/^/, PRETTY_INDENT_STRING)
+      query_str << deparse_leaf_select_stmt(stmt.query.select_stmt).gsub(/^/, PRETTY_INDENT_STRING)
       query_str << "\n)"
 
       view_stmt_str[placeholder_query_string] = query_str
@@ -161,27 +160,86 @@ module ActiveRecordPgFormatDbStructure
       )
       insert_stmt_str << "\n;"
 
-      query_str = pretty_formt_sql_string(PgQuery.deparse_stmt(insert_stmt.select_stmt.inner))
-      query_str.gsub!(/\AVALUES /, "VALUES\n ")
+      query_str = if insert_stmt.select_stmt.inner.values_lists.any?
+                    deparse_values_list_select_stmt(insert_stmt.select_stmt.inner)
+                  else
+                    deparse_leaf_select_stmt(insert_stmt.select_stmt.inner)
+                  end
 
       insert_stmt_str[placeholder_query_string] = query_str
       insert_stmt_str
     end
 
-    def pretty_formt_sql_string(sql)
-      rule = AnbtSql::Rule.new
-      rule.keyword = AnbtSql::Rule::KEYWORD_UPPER_CASE
-      rule.indent_string = PRETTY_INDENT_STRING
-      formatter = AnbtSql::Formatter.new(rule)
-      formatter.format(sql)
+    def deparse_values_list_select_stmt(select_stmt)
+      values_str = +"VALUES\n "
+      values_str << select_stmt.values_lists.map do |values_list|
+        PgQuery.deparse_stmt(PgQuery::SelectStmt.new(values_lists: [values_list])).gsub(/\AVALUES /, "")
+      end.join("\n,")
+      values_str
     end
 
-    def placeholder_query_string
-      @placeholder_query_string ||= PgQuery.deparse_stmt(placeholder_query_stmt)
+    def deparse_leaf_select_stmt(select_stmt) # rubocop:disable Metrics/PerceivedComplexity
+      target_list_placeholder = PgQuery::ResTarget.new(
+        val: { a_const: { sval: { sval: "target_list_placeholder" } } }
+      )
+
+      if select_stmt.with_clause
+        placeholder_with_clause = PgQuery::WithClause.new(
+          **select_stmt.with_clause.to_h,
+          ctes: select_stmt.with_clause.ctes.map do |cte|
+            PgQuery::Node.from(
+              PgQuery::CommonTableExpr.new(
+                **cte.inner.to_h,
+                ctequery: PgQuery::Node.from(placeholder_query_stmt("placeholder_for_#{cte.inner.ctename}_cte"))
+              )
+            )
+          end
+        )
+      end
+
+      select_stmt_str = PgQuery.deparse_stmt(
+        PgQuery::SelectStmt.new(
+          **select_stmt.to_h,
+          with_clause: placeholder_with_clause,
+          target_list: ([PgQuery::Node.from(target_list_placeholder)] if select_stmt.target_list.any?)
+        )
+      )
+
+      if select_stmt.target_list.any?
+        target_list_str = +"\n"
+        target_list_str << select_stmt.target_list.map do |target|
+          deparse_res_target(target.inner).gsub(/^/, PRETTY_INDENT_STRING)
+        end.join(",\n")
+        target_list_str << "\n"
+
+        select_stmt_str[deparse_res_target(target_list_placeholder)] = target_list_str
+      end
+
+      select_stmt.with_clause&.ctes&.each do |cte|
+        cte_str = +"\n"
+        cte_str << deparse_leaf_select_stmt(cte.inner.ctequery.inner).gsub(/^/, PRETTY_INDENT_STRING)
+        cte_str << "\n"
+
+        select_stmt_str["SELECT placeholder_for_#{cte.inner.ctename}_cte"] = cte_str
+      end
+
+      select_stmt_str.gsub!(/ +$/, "")
+
+      select_stmt_str
     end
 
-    def placeholder_query_stmt
-      @placeholder_query_stmt ||= PgQuery.parse("SELECT placeholder").tree.stmts.first.stmt.select_stmt
+    def deparse_res_target(res_target)
+      PgQuery.deparse_stmt(
+        PgQuery::SelectStmt.new(target_list: [PgQuery::Node.from(res_target)])
+      ).gsub(/\ASELECT /, "")
+    end
+
+    def placeholder_query_string(placeholder_name = "placeholder")
+      PgQuery.deparse_stmt(placeholder_query_stmt(placeholder_name))
+    end
+
+    def placeholder_query_stmt(placeholder_name = "placeholder")
+      PgQuery.parse("SELECT #{placeholder_name}").tree.stmts.first.stmt.select_stmt
     end
   end
 end

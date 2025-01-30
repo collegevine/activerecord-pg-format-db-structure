@@ -64,9 +64,8 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::MoveIndicesAfterCrea
 
         CREATE MATERIALIZED VIEW public.post_stats AS (
             SELECT
-                    *
-                FROM
-                    public.posts
+                *
+             FROM public.posts
         );
         CREATE INDEX index_post_stats_on_score ON public.post_stats USING btree (score);
 
