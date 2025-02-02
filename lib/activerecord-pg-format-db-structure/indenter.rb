@@ -29,10 +29,11 @@ module ActiveRecordPgFormatDbStructure
     INTERSECT = :INTERSECT
     JOIN = :JOIN
     LEFT = :LEFT
-    RIGHT = :RIGHT
     LIMIT = :LIMIT
     OFFSET = :OFFSET
     OR = :OR
+    ORDER = :ORDER
+    RIGHT = :RIGHT
     SELECT = :SELECT
     TABLE = :TABLE
     THEN = :THEN
@@ -125,7 +126,7 @@ module ActiveRecordPgFormatDbStructure
           output.pop_scope
           output.append_scope(type:, indent: 0)
         in {
-          current_token: FROM | WHERE | GROUP | WINDOW | HAVING | LIMIT | OFFSET | FETCH | FOR | UNION |
+          current_token: FROM | WHERE | GROUP | ORDER | WINDOW | HAVING | LIMIT | OFFSET | FETCH | FOR | UNION |
             INTERSECT | EXCEPT => token_type
         }
           output.pop_scope

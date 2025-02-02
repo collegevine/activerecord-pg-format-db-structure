@@ -208,6 +208,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
                   LEFT OUTER JOIN public.main_users ON main_users.id = user_comments.main_user_id
                   WHERE main_users.type::text = 'first'::text
                   GROUP BY mains_1.id, mains_1.comment_id
+                  ORDER BY mains_1.id
               ),
               second_cte AS (
                   SELECT mains_1.id AS main_id,
@@ -245,6 +246,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
                   LEFT JOIN public.main_users ON main_users.id = user_comments.main_user_id
                   WHERE main_users.type::text = 'first'::text
                   GROUP BY mains_1.id, mains_1.comment_id
+                  ORDER BY mains_1.id
               ),
               second_cte AS (
                   SELECT mains_1.id AS main_id,
