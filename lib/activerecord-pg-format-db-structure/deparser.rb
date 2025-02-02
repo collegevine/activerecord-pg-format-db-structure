@@ -69,6 +69,10 @@ module ActiveRecordPgFormatDbStructure
     def deparse_create_table_as_stmt(stmt)
       table_str = "\n\n\n-- Name: #{stmt.into.rel.relname}; Type: MATERIALIZED VIEW;\n\n"
       table_str << deparse_stmt_and_indent(stmt)
+
+      # couldn't find a better solution for this, but probably an OK workaround?
+      table_str.gsub!(/ WITH NO DATA\z/, "\nWITH NO DATA")
+
       table_str << ";"
       table_str
     end

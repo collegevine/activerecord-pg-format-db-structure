@@ -194,6 +194,26 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
               FROM public.posts;
         SQL
       end
+
+      it "deals with WITH NO DATA suffix" do
+        source = +<<~SQL
+          CREATE MATERIALIZED VIEW public.post_stats AS (
+            SELECT * FROM public.posts
+          ) WITH NO DATA;
+        SQL
+
+        expect(formatter.format(source)).to eq(<<~SQL.chomp)
+
+
+
+          -- Name: post_stats; Type: MATERIALIZED VIEW;
+
+          CREATE MATERIALIZED VIEW public.post_stats AS
+              SELECT *
+              FROM public.posts
+          WITH NO DATA;
+        SQL
+      end
     end
 
     context "with some complex examples" do
