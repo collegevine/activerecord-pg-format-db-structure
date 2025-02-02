@@ -270,7 +270,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineSerials do
 
 
         INSERT INTO schema_migrations (version) VALUES
-         ('20250124155339')
+          ('20250124155339')
         ;
       SQL
     end

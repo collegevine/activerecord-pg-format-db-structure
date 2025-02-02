@@ -105,7 +105,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableState
 
 
         INSERT INTO schema_migrations (version) VALUES
-         ('20250124155339')
+          ('20250124155339')
         ;
       SQL
     end
@@ -178,7 +178,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableState
 
 
         INSERT INTO schema_migrations (version) VALUES
-         ('20250124155339')
+          ('20250124155339')
         ;
       SQL
     end

@@ -207,7 +207,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
 
 
         INSERT INTO schema_migrations (version) VALUES
-         ('20250124155339')
+          ('20250124155339')
         ;
       SQL
     end

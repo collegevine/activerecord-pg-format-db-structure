@@ -221,7 +221,7 @@ ALTER TABLE ONLY public.comments
 
 
 INSERT INTO schema_migrations (version) VALUES
- ('20250124155339')
+  ('20250124155339')
 ;
 ```
 

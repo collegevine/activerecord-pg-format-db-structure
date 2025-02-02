@@ -15,19 +15,10 @@ Style/StringLiteralsInInterpolation:
 Naming/FileName:
   Enabled: false
 
-Metrics/BlockLength:
+Naming/VariableNumber:
   Enabled: false
 
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/ClassLength:
-  Enabled: false
-
-Metrics/CyclomaticComplexity:
+Metrics:
   Enabled: false
 
 RSpec/SpecFilePathFormat:

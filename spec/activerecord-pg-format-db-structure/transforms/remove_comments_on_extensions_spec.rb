@@ -55,7 +55,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::RemoveCommentsOnExte
 
 
         INSERT INTO schema_migrations (version) VALUES
-         ('20250124155339')
+          ('20250124155339')
         ;
       SQL
     end

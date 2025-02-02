@@ -62,11 +62,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::MoveIndicesAfterCrea
             score int NOT NULL
         );
 
-        CREATE MATERIALIZED VIEW public.post_stats AS (
-            SELECT
-                *
-             FROM public.posts
-        );
+        CREATE MATERIALIZED VIEW public.post_stats AS
+            SELECT *
+            FROM public.posts;
         CREATE INDEX index_post_stats_on_score ON public.post_stats USING btree (score);
 
 
@@ -81,7 +79,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::MoveIndicesAfterCrea
 
 
         INSERT INTO schema_migrations (version) VALUES
-         ('20250124155339')
+          ('20250124155339')
         ;
       SQL
     end
