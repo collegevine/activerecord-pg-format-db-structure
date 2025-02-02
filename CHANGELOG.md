@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.1.3] - 2025-02-02
+
 - Rework SQL formatting by only adding indentation to deparsed statements
 
 ## [0.1.2] - 2025-01-30
