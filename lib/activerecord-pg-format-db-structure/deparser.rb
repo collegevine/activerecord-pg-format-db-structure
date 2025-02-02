@@ -18,6 +18,10 @@ module ActiveRecordPgFormatDbStructure
         deparse_insert_stmt(raw_statement.stmt.insert_stmt)
       in stmt: { create_stmt: _ }
         deparse_create_stmt(raw_statement.stmt.create_stmt)
+      in stmt: { view_stmt: _ }
+        deparse_view_stmt(raw_statement.stmt.view_stmt)
+      in stmt: { create_table_as_stmt: _ }
+        deparse_create_table_as_stmt(raw_statement.stmt.create_table_as_stmt)
       in stmt: { index_stmt: _ }
         deparse_stmt_compact(raw_statement.stmt.index_stmt)
       else
@@ -48,9 +52,23 @@ module ActiveRecordPgFormatDbStructure
       insert_str
     end
 
-    def deparse_create_stmt(create_stmt)
-      table_str = "\n\n\n-- Name: #{create_stmt.relation.relname}; Type: TABLE;\n\n"
-      table_str << deparse_stmt_and_indent(create_stmt)
+    def deparse_create_stmt(stmt)
+      table_str = "\n\n\n-- Name: #{stmt.relation.relname}; Type: TABLE;\n\n"
+      table_str << deparse_stmt_and_indent(stmt)
+      table_str << ";"
+      table_str
+    end
+
+    def deparse_view_stmt(stmt)
+      table_str = "\n\n\n-- Name: #{stmt.view.relname}; Type: VIEW;\n\n"
+      table_str << deparse_stmt_and_indent(stmt)
+      table_str << ";"
+      table_str
+    end
+
+    def deparse_create_table_as_stmt(stmt)
+      table_str = "\n\n\n-- Name: #{stmt.into.rel.relname}; Type: MATERIALIZED VIEW;\n\n"
+      table_str << deparse_stmt_and_indent(stmt)
       table_str << ";"
       table_str
     end

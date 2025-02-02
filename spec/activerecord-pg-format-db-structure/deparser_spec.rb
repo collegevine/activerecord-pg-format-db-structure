@@ -126,6 +126,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
 
 
+
+          -- Name: post_stats; Type: VIEW;
+
           CREATE VIEW public.post_stats AS
               SELECT *
               FROM public.posts;
@@ -141,6 +144,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
 
+
+
+          -- Name: post_stats; Type: VIEW;
 
           CREATE VIEW public.post_stats AS
               VALUES ('foo');
@@ -179,6 +185,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
 
+
+
+          -- Name: post_stats; Type: MATERIALIZED VIEW;
 
           CREATE MATERIALIZED VIEW public.post_stats AS
               SELECT *
@@ -223,6 +232,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
 
+
+
+          -- Name: my_bigg_aggregated_view; Type: VIEW;
 
           CREATE VIEW public.my_bigg_aggregated_view AS
               WITH first_cte AS (

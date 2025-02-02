@@ -62,6 +62,9 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::MoveIndicesAfterCrea
             score int NOT NULL
         );
 
+
+        -- Name: post_stats; Type: MATERIALIZED VIEW;
+
         CREATE MATERIALIZED VIEW public.post_stats AS
             SELECT *
             FROM public.posts;
