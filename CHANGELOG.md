@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Rework SQL formatting by only adding indentation to deparsed statements
+
 ## [0.1.2] - 2025-01-30
 
 - Get rid of `anbt-sql-formatter` dependency since it breaks queries with type casting
