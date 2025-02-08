@@ -245,7 +245,7 @@ You can also add your own transforms (see below).
 Add the following to your Gemfile:
 
 ```ruby
-gem 'activerecord-clean-db-structure'
+gem 'activerecord-pg-format-db-structure'
 ```
 
 ## Usage
