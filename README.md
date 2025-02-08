@@ -259,6 +259,7 @@ Rails.application.configure do
 
   config.activerecord_pg_format_db_structure.transforms = [
     ActiveRecordPgFormatDbStructure::Transforms::RemoveCommentsOnExtensions,
+    ActiveRecordPgFormatDbStructure::Transforms::SortSchemaMigrations,
     ActiveRecordPgFormatDbStructure::Transforms::InlinePrimaryKeys,
     # ActiveRecordPgFormatDbStructure::Transforms::InlineForeignKeys,
     ActiveRecordPgFormatDbStructure::Transforms::InlineSerials,
@@ -292,6 +293,10 @@ Remove unnecessary comment, whitespase and empty lines.
 ### RemoveCommentsOnExtensions
 
 Remove COMMENT statement applied to extensions
+
+### SortSchemaMigrations
+
+Sort schema_migrations inserts to be in chronological order, helps with reducing merge conflicts.
 
 ### InlinePrimaryKeys
 

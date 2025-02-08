@@ -11,6 +11,7 @@ require_relative "activerecord-pg-format-db-structure/transforms/inline_foreign_
 require_relative "activerecord-pg-format-db-structure/transforms/move_indices_after_create_table"
 require_relative "activerecord-pg-format-db-structure/transforms/inline_constraints"
 require_relative "activerecord-pg-format-db-structure/transforms/group_alter_table_statements"
+require_relative "activerecord-pg-format-db-structure/transforms/sort_schema_migrations"
 
 module ActiveRecordPgFormatDbStructure
   DEFAULT_PREPROCESSORS = [
@@ -19,6 +20,7 @@ module ActiveRecordPgFormatDbStructure
 
   DEFAULT_TRANSFORMS = [
     Transforms::RemoveCommentsOnExtensions,
+    Transforms::SortSchemaMigrations,
     Transforms::InlinePrimaryKeys,
     # Transforms::InlineForeignKeys,
     Transforms::InlineSerials,

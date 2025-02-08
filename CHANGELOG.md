@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Sort schema migrations inserts
+
 ## [0.1.3] - 2025-02-02
 
 - Rework SQL formatting by only adding indentation to deparsed statements
