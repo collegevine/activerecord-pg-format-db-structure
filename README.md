@@ -265,7 +265,8 @@ Rails.application.configure do
     ActiveRecordPgFormatDbStructure::Transforms::InlineSerials,
     ActiveRecordPgFormatDbStructure::Transforms::InlineConstraints,
     ActiveRecordPgFormatDbStructure::Transforms::MoveIndicesAfterCreateTable,
-    ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableStatements
+    ActiveRecordPgFormatDbStructure::Transforms::GroupAlterTableStatements,
+    ActiveRecordPgFormatDbStructure::Transforms::SortTableColumns,
   ]
 
   config.activerecord_pg_format_db_structure.deparser = ActiveRecordPgFormatDbStructure::Deparser
@@ -338,6 +339,49 @@ Group alter table statements into one operation per
 table.
 
 Should be run after other operations that inline alter statements.
+
+### SortTableColumns
+
+Sort table columns, by order of priority and alphabetically:
+
+ 1. primary key
+ 2. foreign keys
+ 3. generic columns
+ 4. timestamps
+ 5. constraints
+
+Note that you can define your own ordering by replacing the default `priority_mapping`:
+
+```ruby
+ActiveRecordPgFormatDbStructure::Transforms::SortTableColumns.priority_mapping = lambda do |sortable_entry|
+  case sortable_entry
+  in is_column: true, is_primary_key: true, name:
+    [0, name]
+  in is_column: true, is_foreign_key: true, name:
+    [1, name]
+  in is_column: true, is_timestamp: false, name:
+    [2, name]
+  in is_column: true, is_timestamp: true, name:
+    [3, name]
+  in is_constraint: true, name:
+    [5, name]
+  end
+end
+```
+
+where `sortable_entry` is an instance of:
+
+```ruby
+SORTABLE_ENTRY = Data.define(
+  :name,
+  :is_column,
+  :is_constraint,
+  :is_primary_key,
+  :is_foreign_key,
+  :is_timestamp,
+  :raw_entry
+)
+```
 
 ## Deparser
 

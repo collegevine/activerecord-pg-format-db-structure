@@ -12,6 +12,7 @@ require_relative "activerecord-pg-format-db-structure/transforms/move_indices_af
 require_relative "activerecord-pg-format-db-structure/transforms/inline_constraints"
 require_relative "activerecord-pg-format-db-structure/transforms/group_alter_table_statements"
 require_relative "activerecord-pg-format-db-structure/transforms/sort_schema_migrations"
+require_relative "activerecord-pg-format-db-structure/transforms/sort_table_columns"
 
 module ActiveRecordPgFormatDbStructure
   DEFAULT_PREPROCESSORS = [
@@ -26,7 +27,8 @@ module ActiveRecordPgFormatDbStructure
     Transforms::InlineSerials,
     Transforms::InlineConstraints,
     Transforms::MoveIndicesAfterCreateTable,
-    Transforms::GroupAlterTableStatements
+    Transforms::GroupAlterTableStatements,
+    Transforms::SortTableColumns
   ].freeze
 
   DEFAULT_DEPARSER = Deparser
