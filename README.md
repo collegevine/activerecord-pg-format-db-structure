@@ -9,6 +9,8 @@ By default, it will:
 * Inline table constraints
 * Move index creation below their corresponding tables
 * Group `ALTER TABLE` statements into a single statement per table
+* Sorts table column declarations (primary key / foreign keys / data / timestamp / constraints)
+* Sorts `schema_migrations` inserts
 * Removes unnecessary whitespace
 
 The task will transform this raw `structure.sql`:
