@@ -164,6 +164,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
             ADD CONSTRAINT fk_rails_0000000002 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
         INSERT INTO "schema_migrations" (version) VALUES
+        ('20250134155339'),
         ('20250124155339');
       SQL
 
@@ -208,6 +209,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
 
         INSERT INTO schema_migrations (version) VALUES
           ('20250124155339')
+        , ('20250134155339')
         ;
       SQL
     end
