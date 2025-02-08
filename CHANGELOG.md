@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.1.4] - 2025-02-08
+
 - Sort schema migrations inserts
 
 ## [0.1.3] - 2025-02-02
