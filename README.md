@@ -1,4 +1,7 @@
 # activerecord-pg-format-db-structure
+[![Gem Version](https://img.shields.io/gem/v/activerecord-pg-format-db-structure)](https://rubygems.org/gems/activerecord-pg-format-db-structure)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ReifyAB/activerecord-pg-format-db-structure/main.yml)
+
 
 Automatically cleans up your `structure.sql` file after each rails migration.
 
