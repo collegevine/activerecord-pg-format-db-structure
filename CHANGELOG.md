@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Sort table columns
+
 ## [0.1.4] - 2025-02-08
 
 - Sort schema migrations inserts

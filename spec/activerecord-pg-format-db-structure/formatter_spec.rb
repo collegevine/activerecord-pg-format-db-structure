@@ -178,8 +178,8 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
 
         CREATE TABLE public.comments (
             id bigserial PRIMARY KEY,
-            user_id bigint NOT NULL,
             post_id bigint NOT NULL,
+            user_id bigint NOT NULL,
             created_at timestamp(6) NOT NULL,
             updated_at timestamp(6) NOT NULL
         );
