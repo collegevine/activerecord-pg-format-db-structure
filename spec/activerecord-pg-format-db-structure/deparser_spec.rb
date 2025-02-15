@@ -3,7 +3,6 @@
 RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
   let(:formatter) do
     ActiveRecordPgFormatDbStructure::Formatter.new(
-      preprocessors: [],
       transforms: [],
       deparser: described_class
     )

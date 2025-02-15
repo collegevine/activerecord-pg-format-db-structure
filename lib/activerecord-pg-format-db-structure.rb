@@ -3,7 +3,6 @@
 require_relative "activerecord-pg-format-db-structure/version"
 
 require_relative "activerecord-pg-format-db-structure/deparser"
-require_relative "activerecord-pg-format-db-structure/preprocessors/remove_whitespaces"
 require_relative "activerecord-pg-format-db-structure/transforms/remove_comments_on_extensions"
 require_relative "activerecord-pg-format-db-structure/transforms/inline_serials"
 require_relative "activerecord-pg-format-db-structure/transforms/inline_primary_keys"
@@ -15,10 +14,6 @@ require_relative "activerecord-pg-format-db-structure/transforms/sort_schema_mig
 require_relative "activerecord-pg-format-db-structure/transforms/sort_table_columns"
 
 module ActiveRecordPgFormatDbStructure
-  DEFAULT_PREPROCESSORS = [
-    Preprocessors::RemoveWhitespaces
-  ].freeze
-
   DEFAULT_TRANSFORMS = [
     Transforms::RemoveCommentsOnExtensions,
     Transforms::SortSchemaMigrations,

@@ -3,7 +3,9 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ReifyAB/activerecord-pg-format-db-structure/main.yml)
 
 
-Automatically cleans up your `structure.sql` file after each rails migration.
+Automatically cleans up your PostgreSQL `structure.sql` file after each rails migration.
+
+Say good-bye to small those small diffs you get between coworkers!
 
 By default, it will:
 
@@ -14,9 +16,11 @@ By default, it will:
 * Group `ALTER TABLE` statements into a single statement per table
 * Sorts table column declarations (primary key / foreign keys / data / timestamp / constraints)
 * Sorts `schema_migrations` inserts
-* Removes unnecessary whitespace
+* Format and indent the entire file consistently
 
-The task will transform this raw `structure.sql`:
+It can also optionally inline foreign key declarations (see below).
+
+As an example, the task will transform this raw `structure.sql`:
 
 <details>
 
@@ -184,7 +188,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ```
 </details>
 
-into this much more compact and normalized version:
+into this normalize (and much more compatch & readable) version:
 
 ```sql
 
@@ -230,8 +234,9 @@ INSERT INTO schema_migrations (version) VALUES
 ;
 ```
 
-which is a lot more compact, easier to read, and reduces the risk of
-getting random diffs between machines after each migration.
+The goal is to make your `structure.sql` file easier to read and to
+reduce the risk of getting random diffs between machines after each
+migration.
 
 Those transformations are made by manipulating the SQL AST directly
 using [pg_query](https://github.com/pganalyze/pg_query), and each
@@ -258,10 +263,6 @@ If you want to configure which transforms to use, you can configure the library 
 
 ```ruby
 Rails.application.configure do
-  config.activerecord_pg_format_db_structure.preprocessors = [
-    ActiveRecordPgFormatDbStructure::Preprocessors::RemoveWhitespaces
-  ]
-
   config.activerecord_pg_format_db_structure.transforms = [
     ActiveRecordPgFormatDbStructure::Transforms::RemoveCommentsOnExtensions,
     ActiveRecordPgFormatDbStructure::Transforms::SortSchemaMigrations,
@@ -287,12 +288,6 @@ structure = File.read("db/structure.sql")
 formatted = ActiveRecordPgFormatDbStructure::Formatter.new.format(structure)
 File.write("db/structure.sql", formatted)
 ```
-
-## Preprocessors
-
-### RemoveWhitespaces
-
-Remove unnecessary comment, whitespase and empty lines.
 
 ## Transformers
 
