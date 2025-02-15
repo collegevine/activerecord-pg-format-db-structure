@@ -265,6 +265,7 @@ If you want to configure which transforms to use, you can configure the library 
 Rails.application.configure do
   config.activerecord_pg_format_db_structure.transforms = [
     ActiveRecordPgFormatDbStructure::Transforms::RemoveCommentsOnExtensions,
+    ActiveRecordPgFormatDbStructure::Transforms::RemoveDefaultsSetCommands,
     ActiveRecordPgFormatDbStructure::Transforms::SortSchemaMigrations,
     ActiveRecordPgFormatDbStructure::Transforms::InlinePrimaryKeys,
     # ActiveRecordPgFormatDbStructure::Transforms::InlineForeignKeys,
@@ -294,6 +295,27 @@ File.write("db/structure.sql", formatted)
 ### RemoveCommentsOnExtensions
 
 Remove COMMENT statement applied to extensions
+
+### RemoveDefaultsSetCommands
+
+Remove SET commands that apply default values to postgres settings. By default, the following defaults are handled:
+
+```ruby
+ActiveRecordPgFormatDbStructure::Transforms::RemoveDefaultsSetCommands.postgres_config_defaults = {
+  default_table_access_method: "heap",
+  default_with_oids: false,
+  idle_in_transaction_session_timeout: 0,
+  lock_timeout: 0,
+  statement_timeout: 0,
+  transaction_timeout: 0,
+  standard_conforming_strings: true,
+  xmloption: "content"
+}
+```
+
+Which are the default values since Postgres 9.1. You can make changes
+to the above config in case you want to handle more cases.
+
 
 ### SortSchemaMigrations
 

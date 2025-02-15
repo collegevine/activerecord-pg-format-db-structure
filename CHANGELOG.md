@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Add transform to remove SET commands with default values
+
 ## [0.2.0] - 2025-02-15
 
 - Remove preprocessors (no longer relevant now that we don't reuse the source string in the output)
