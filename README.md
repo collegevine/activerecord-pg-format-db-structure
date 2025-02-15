@@ -5,7 +5,7 @@
 
 Automatically cleans up your PostgreSQL `structure.sql` file after each rails migration.
 
-Say good-bye to small those small diffs you get between coworkers!
+Say good-bye to those pesky diffs you get between coworkers!
 
 By default, it will:
 
