@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.1] - 2025-02-15
+
 - Add transform to remove SET commands with default values
 
 ## [0.2.0] - 2025-02-15
