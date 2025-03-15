@@ -27,12 +27,27 @@ module ActiveRecordPgFormatDbStructure
     private
 
     def newlines_separator(previous_kind:, current_kind:)
-      case [previous_kind, current_kind]
-      in [nil, _]
+      case [
+        previous_kind,
+        current_kind
+      ]
+      in [
+        nil,
+        _
+      ]
         ""
-      in [_, :insert_stmt | :create_stmt | :view_stmt | :create_table_as_stmt]
+      in [
+        _,
+        :insert_stmt | :create_stmt | :view_stmt | :create_table_as_stmt
+      ]
         "\n\n\n"
-      in [ :create_stmt | :view_stmt | :create_table_as_stmt | :index_stmt, :index_stmt]
+      in [
+        :create_stmt | :view_stmt | :create_table_as_stmt | :index_stmt,
+        :index_stmt
+      ] | [
+        :variable_set_stmt,
+        :variable_set_stmt
+      ]
         "\n"
       else
         "\n\n"

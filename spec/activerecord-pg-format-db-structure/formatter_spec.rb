@@ -184,9 +184,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
         SELECT pg_catalog.set_config('search_path', '', false);
 
         SET check_function_bodies TO TRUE;
-
         SET client_min_messages TO warning;
-
         SET row_security TO OFF;
 
         CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
