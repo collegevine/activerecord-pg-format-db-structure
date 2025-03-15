@@ -4,8 +4,23 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
   let(:formatter) do
     ActiveRecordPgFormatDbStructure::Formatter.new(
       transforms: [],
-      deparser: described_class
+      deparser: described_class,
+      statement_appender:
     )
+  end
+
+  let(:statement_appender) do
+    Class.new do
+      attr_reader :output
+
+      def initialize
+        @output = +""
+      end
+
+      def append_statement!(statement, **)
+        @output << statement
+      end
+    end
   end
 
   describe "#deparse_raw_statement" do
@@ -16,8 +31,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
           SELECT *
           FROM my_table
           WHERE 1 = 1;
@@ -30,8 +43,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
           SELECT '1'::int;
         SQL
       end
@@ -49,8 +60,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
           SELECT sum(foo) AS column_a,
                  CASE
                    WHEN foo = 'a' THEN 1
@@ -72,9 +81,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           INSERT INTO schema_migrations (version) VALUES
             ('20250124155339')
           , ('20250134155339')
@@ -90,9 +96,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           INSERT INTO schema_migrations (version)
           SELECT foo
           FROM bar
@@ -108,7 +111,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
           CREATE UNIQUE INDEX only_one_pending_per_comment_id ON public.my_table USING btree (comment_id) WHERE pending;
         SQL
       end
@@ -123,9 +125,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           -- Name: post_stats; Type: VIEW;
 
           CREATE VIEW public.post_stats AS
@@ -142,9 +141,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           -- Name: post_stats; Type: VIEW;
 
           CREATE VIEW public.post_stats AS
@@ -161,8 +157,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
           WITH my_cte AS (
               SELECT foo,
                      baz
@@ -183,9 +177,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           -- Name: post_stats; Type: MATERIALIZED VIEW;
 
           CREATE MATERIALIZED VIEW public.post_stats AS
@@ -202,9 +193,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           -- Name: post_stats; Type: MATERIALIZED VIEW;
 
           CREATE MATERIALIZED VIEW public.post_stats AS
@@ -251,9 +239,6 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
         SQL
 
         expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
           -- Name: my_bigg_aggregated_view; Type: VIEW;
 
           CREATE VIEW public.my_bigg_aggregated_view AS

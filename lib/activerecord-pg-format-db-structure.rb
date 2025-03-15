@@ -3,6 +3,7 @@
 require_relative "activerecord-pg-format-db-structure/version"
 
 require_relative "activerecord-pg-format-db-structure/deparser"
+require_relative "activerecord-pg-format-db-structure/statement_appender"
 require_relative "activerecord-pg-format-db-structure/transforms/remove_comments_on_extensions"
 require_relative "activerecord-pg-format-db-structure/transforms/inline_serials"
 require_relative "activerecord-pg-format-db-structure/transforms/inline_primary_keys"
@@ -29,6 +30,7 @@ module ActiveRecordPgFormatDbStructure
   ].freeze
 
   DEFAULT_DEPARSER = Deparser
+  DEFAULT_STATEMENT_APPENDER = StatementAppender
 end
 
 # :nocov:
