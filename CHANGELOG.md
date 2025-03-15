@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.3.0] - 2025-03-15
+
 - Introduce StatementAppender for better spacing between statements
 
 ## [0.2.1] - 2025-02-15
