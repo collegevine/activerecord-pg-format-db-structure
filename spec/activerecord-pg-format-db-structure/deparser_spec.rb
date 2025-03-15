@@ -15,9 +15,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           SELECT * FROM my_table WHERE 1 = 1;
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           SELECT *
           FROM my_table
           WHERE 1 = 1;
@@ -29,9 +27,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           SELECT '1'::integer;
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           SELECT '1'::int;
         SQL
       end
@@ -48,9 +44,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           WHERE bar > 10 OR bar < 5 OR (bar < 2 AND baz);
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           SELECT sum(foo) AS column_a,
                  CASE
                    WHEN foo = 'a' THEN 1
@@ -71,10 +65,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           INSERT INTO schema_migrations (version) VALUES ('20250124155339'), ('20250134155339') , ('20250144155339');
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           INSERT INTO schema_migrations (version) VALUES
             ('20250124155339')
           , ('20250134155339')
@@ -89,10 +80,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
 
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           INSERT INTO schema_migrations (version)
           SELECT foo
           FROM bar
@@ -107,8 +95,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           CREATE UNIQUE INDEX only_one_pending_per_comment_id ON public.my_table USING btree (comment_id) WHERE pending;
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           CREATE UNIQUE INDEX only_one_pending_per_comment_id ON public.my_table USING btree (comment_id) WHERE pending;
         SQL
       end
@@ -122,10 +109,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           );
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           -- Name: post_stats; Type: VIEW;
 
           CREATE VIEW public.post_stats AS
@@ -141,10 +125,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           );
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           -- Name: post_stats; Type: VIEW;
 
           CREATE VIEW public.post_stats AS
@@ -160,9 +141,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           SELECT * from my_cte;
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           WITH my_cte AS (
               SELECT foo,
                      baz
@@ -182,10 +161,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           );
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           -- Name: post_stats; Type: MATERIALIZED VIEW;
 
           CREATE MATERIALIZED VIEW public.post_stats AS
@@ -201,10 +177,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
           ) WITH NO DATA;
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           -- Name: post_stats; Type: MATERIALIZED VIEW;
 
           CREATE MATERIALIZED VIEW public.post_stats AS
@@ -250,10 +223,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Deparser do
               ) main_status;
         SQL
 
-        expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+        expect(formatter.format(source)).to eq(<<~SQL)
           -- Name: my_bigg_aggregated_view; Type: VIEW;
 
           CREATE VIEW public.my_bigg_aggregated_view AS

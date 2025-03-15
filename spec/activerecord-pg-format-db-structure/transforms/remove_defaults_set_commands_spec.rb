@@ -21,17 +21,13 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::RemoveDefaultsSetCom
         SET row_security = off;
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         SET client_encoding TO "UTF8";
 
         SELECT pg_catalog.set_config('search_path', '', false);
 
         SET check_function_bodies TO FALSE;
-
         SET client_min_messages TO warning;
-
         SET row_security TO OFF;
       SQL
     end
@@ -55,27 +51,18 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::RemoveDefaultsSetCom
         SET row_security = on;
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         SET statement_timeout TO 1;
-
         SET default_with_oids TO TRUE;
-
         SET lock_timeout TO 2;
-
         SET idle_in_transaction_session_timeout TO 3;
-
         SET client_encoding TO "UTF8";
-
         SET standard_conforming_strings TO OFF;
 
         SELECT pg_catalog.set_config('search_path', '', false);
 
         SET check_function_bodies TO FALSE;
-
         SET client_min_messages TO warning;
-
         SET row_security TO ON;
       SQL
     end
@@ -89,9 +76,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::RemoveDefaultsSetCom
         SET statement_timeout = 10.0;
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         SET statement_timeout TO 10.0;
       SQL
     end

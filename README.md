@@ -191,8 +191,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 into this normalize (and much more compatch & readable) version:
 
 ```sql
-
-
 CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
 

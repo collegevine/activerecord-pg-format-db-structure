@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- Introduce StatementAppender for better spacing between statements
+
 ## [0.2.1] - 2025-02-15
 
 - Add transform to remove SET commands with default values

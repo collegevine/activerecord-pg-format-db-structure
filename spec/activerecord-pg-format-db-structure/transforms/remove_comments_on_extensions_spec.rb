@@ -37,9 +37,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::RemoveCommentsOnExte
         ('20250124155339');
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
 

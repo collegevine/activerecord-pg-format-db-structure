@@ -178,17 +178,13 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Formatter do
         ('20250124155339');
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         SET client_encoding TO "UTF8";
 
         SELECT pg_catalog.set_config('search_path', '', false);
 
         SET check_function_bodies TO TRUE;
-
         SET client_min_messages TO warning;
-
         SET row_security TO OFF;
 
         CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;

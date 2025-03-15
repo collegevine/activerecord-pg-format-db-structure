@@ -32,42 +32,42 @@ module ActiveRecordPgFormatDbStructure
     private
 
     def deparse_stmt_generic(stmt)
-      generic_str = +"\n\n"
+      generic_str = +""
       generic_str << deparse_stmt_and_indent(stmt)
       generic_str << ";"
       generic_str
     end
 
     def deparse_stmt_compact(stmt)
-      compact_str = +"\n"
+      compact_str = +""
       compact_str << deparse_stmt(stmt)
       compact_str << ";"
       compact_str
     end
 
     def deparse_insert_stmt(stmt)
-      insert_str = +"\n\n\n"
+      insert_str = +""
       insert_str << deparse_stmt_and_indent(stmt)
       insert_str << "\n;"
       insert_str
     end
 
     def deparse_create_stmt(stmt)
-      table_str = "\n\n\n-- Name: #{stmt.relation.relname}; Type: TABLE;\n\n"
+      table_str = "-- Name: #{stmt.relation.relname}; Type: TABLE;\n\n"
       table_str << deparse_stmt_and_indent(stmt)
       table_str << ";"
       table_str
     end
 
     def deparse_view_stmt(stmt)
-      table_str = "\n\n\n-- Name: #{stmt.view.relname}; Type: VIEW;\n\n"
+      table_str = "-- Name: #{stmt.view.relname}; Type: VIEW;\n\n"
       table_str << deparse_stmt_and_indent(stmt)
       table_str << ";"
       table_str
     end
 
     def deparse_create_table_as_stmt(stmt)
-      table_str = "\n\n\n-- Name: #{stmt.into.rel.relname}; Type: MATERIALIZED VIEW;\n\n"
+      table_str = "-- Name: #{stmt.into.rel.relname}; Type: MATERIALIZED VIEW;\n\n"
       table_str << deparse_stmt_and_indent(stmt)
 
       # couldn't find a better solution for this, but probably an OK workaround?
