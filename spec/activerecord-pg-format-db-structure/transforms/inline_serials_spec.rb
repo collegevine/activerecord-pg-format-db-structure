@@ -202,9 +202,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlineSerials do
         ('20250124155339');
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA public;
 
         COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';

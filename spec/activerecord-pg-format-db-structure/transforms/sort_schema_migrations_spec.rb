@@ -23,10 +23,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::SortSchemaMigrations
         ('20250101000001');
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         -- Name: comments; Type: TABLE;
 
         CREATE TABLE public.comments (

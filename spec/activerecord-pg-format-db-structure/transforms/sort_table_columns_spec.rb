@@ -26,10 +26,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::SortTableColumns do
           ADD CONSTRAINT postive_score_take_2 CHECK (score > 0);
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         -- Name: comments; Type: TABLE;
 
         CREATE TABLE public.comments (
@@ -77,10 +74,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::SortTableColumns do
 
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         -- Name: comments; Type: TABLE;
 
         CREATE TABLE public.comments (
@@ -129,10 +123,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::SortTableColumns do
 
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         -- Name: comments; Type: TABLE;
 
         CREATE TABLE public.comments (

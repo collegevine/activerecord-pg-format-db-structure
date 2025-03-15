@@ -47,10 +47,7 @@ RSpec.describe ActiveRecordPgFormatDbStructure::Transforms::InlinePrimaryKeys do
         ('20250124155339');
       SQL
 
-      expect(formatter.format(source)).to eq(<<~SQL.chomp)
-
-
-
+      expect(formatter.format(source)).to eq(<<~SQL)
         -- Name: comments; Type: TABLE;
 
         CREATE TABLE public.comments (
